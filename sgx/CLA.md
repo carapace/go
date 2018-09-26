@@ -8,7 +8,7 @@ It is important to read and understand this legal agreement.
 
 #### 1. Download this file
 ```
-$ wget
+$ wget https://raw.githubusercontent.com/carapace/go/master/sgx/CLA.md
 
 ````
 
