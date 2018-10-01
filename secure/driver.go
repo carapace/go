@@ -59,7 +59,7 @@ type Driver interface {
 
 	// Serve starts an attestation server. If no servers are provided, the driver will default to the protobuf
 	// implementation.
-	Serve(...v1.AttestationServer) error
+	Serve(...Server) error
 }
 
 // Execute runs a file within the secure enclave. Execute is not guaranteed to be suitable
@@ -91,6 +91,6 @@ func Load(privkey io.Reader) error {
 
 // Serve starts an attestation server. If no servers are provided, the driver will default to the protobuf
 // implementation.
-func Serve(server ...v1.AttestationServer) error {
+func Serve(server ...Server) error {
 	return driver.Serve(server...)
 }

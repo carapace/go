@@ -9,6 +9,11 @@ message AttestationResponse {
     bytes Attestation = 1;
 }
 
-service Attestation {
-    rpc Attestate(google.protobuf.Empty) returns (AttestationResponse);
+service ClientAttestation {
+    rpc ValidateAttestation (AttestationResponse) returns (google.protobuf.Empty);
 }
+
+service Attestation {
+    rpc ProofAttestation(google.protobuf.Empty) returns (AttestationResponse);
+}
+

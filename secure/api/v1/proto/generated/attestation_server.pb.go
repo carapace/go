@@ -35,7 +35,7 @@ func (m *AttestationResponse) Reset()         { *m = AttestationResponse{} }
 func (m *AttestationResponse) String() string { return proto.CompactTextString(m) }
 func (*AttestationResponse) ProtoMessage()    {}
 func (*AttestationResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_attestation_server_1cbace86f7c75e0e, []int{0}
+	return fileDescriptor_attestation_server_4b5838f60bd951e0, []int{0}
 }
 func (m *AttestationResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_AttestationResponse.Unmarshal(m, b)
@@ -74,11 +74,75 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
+// ClientAttestationClient is the client API for ClientAttestation service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type ClientAttestationClient interface {
+	ValidateAttestation(ctx context.Context, in *AttestationResponse, opts ...grpc.CallOption) (*empty.Empty, error)
+}
+
+type clientAttestationClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewClientAttestationClient(cc *grpc.ClientConn) ClientAttestationClient {
+	return &clientAttestationClient{cc}
+}
+
+func (c *clientAttestationClient) ValidateAttestation(ctx context.Context, in *AttestationResponse, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/v1.attestation.ClientAttestation/ValidateAttestation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ClientAttestationServer is the server API for ClientAttestation service.
+type ClientAttestationServer interface {
+	ValidateAttestation(context.Context, *AttestationResponse) (*empty.Empty, error)
+}
+
+func RegisterClientAttestationServer(s *grpc.Server, srv ClientAttestationServer) {
+	s.RegisterService(&_ClientAttestation_serviceDesc, srv)
+}
+
+func _ClientAttestation_ValidateAttestation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AttestationResponse)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClientAttestationServer).ValidateAttestation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v1.attestation.ClientAttestation/ValidateAttestation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClientAttestationServer).ValidateAttestation(ctx, req.(*AttestationResponse))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _ClientAttestation_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "v1.attestation.ClientAttestation",
+	HandlerType: (*ClientAttestationServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ValidateAttestation",
+			Handler:    _ClientAttestation_ValidateAttestation_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "definitions/attestation_server.proto",
+}
+
 // AttestationClient is the client API for Attestation service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type AttestationClient interface {
-	Attestate(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*AttestationResponse, error)
+	ProofAttestation(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*AttestationResponse, error)
 }
 
 type attestationClient struct {
@@ -89,9 +153,9 @@ func NewAttestationClient(cc *grpc.ClientConn) AttestationClient {
 	return &attestationClient{cc}
 }
 
-func (c *attestationClient) Attestate(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*AttestationResponse, error) {
+func (c *attestationClient) ProofAttestation(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*AttestationResponse, error) {
 	out := new(AttestationResponse)
-	err := c.cc.Invoke(ctx, "/v1.attestation.Attestation/Attestate", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/v1.attestation.Attestation/ProofAttestation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -100,27 +164,27 @@ func (c *attestationClient) Attestate(ctx context.Context, in *empty.Empty, opts
 
 // AttestationServer is the server API for Attestation service.
 type AttestationServer interface {
-	Attestate(context.Context, *empty.Empty) (*AttestationResponse, error)
+	ProofAttestation(context.Context, *empty.Empty) (*AttestationResponse, error)
 }
 
 func RegisterAttestationServer(s *grpc.Server, srv AttestationServer) {
 	s.RegisterService(&_Attestation_serviceDesc, srv)
 }
 
-func _Attestation_Attestate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Attestation_ProofAttestation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(empty.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AttestationServer).Attestate(ctx, in)
+		return srv.(AttestationServer).ProofAttestation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.attestation.Attestation/Attestate",
+		FullMethod: "/v1.attestation.Attestation/ProofAttestation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AttestationServer).Attestate(ctx, req.(*empty.Empty))
+		return srv.(AttestationServer).ProofAttestation(ctx, req.(*empty.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -130,8 +194,8 @@ var _Attestation_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*AttestationServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Attestate",
-			Handler:    _Attestation_Attestate_Handler,
+			MethodName: "ProofAttestation",
+			Handler:    _Attestation_ProofAttestation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -139,20 +203,22 @@ var _Attestation_serviceDesc = grpc.ServiceDesc{
 }
 
 func init() {
-	proto.RegisterFile("definitions/attestation_server.proto", fileDescriptor_attestation_server_1cbace86f7c75e0e)
+	proto.RegisterFile("definitions/attestation_server.proto", fileDescriptor_attestation_server_4b5838f60bd951e0)
 }
 
-var fileDescriptor_attestation_server_1cbace86f7c75e0e = []byte{
-	// 162 bytes of a gzipped FileDescriptorProto
+var fileDescriptor_attestation_server_4b5838f60bd951e0 = []byte{
+	// 197 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x52, 0x49, 0x49, 0x4d, 0xcb,
 	0xcc, 0xcb, 0x2c, 0xc9, 0xcc, 0xcf, 0x2b, 0xd6, 0x4f, 0x2c, 0x29, 0x49, 0x2d, 0x2e, 0x49, 0x04,
 	0x71, 0xe2, 0x8b, 0x53, 0x8b, 0xca, 0x52, 0x8b, 0xf4, 0x0a, 0x8a, 0xf2, 0x4b, 0xf2, 0x85, 0xf8,
 	0xca, 0x0c, 0xf5, 0x90, 0x24, 0xa5, 0xa4, 0xd3, 0xf3, 0xf3, 0xd3, 0x73, 0x52, 0xf5, 0xc1, 0xb2,
 	0x49, 0xa5, 0x69, 0xfa, 0xa9, 0xb9, 0x05, 0x25, 0x95, 0x10, 0xc5, 0x4a, 0xe6, 0x5c, 0xc2, 0x8e,
 	0x08, 0xb5, 0x41, 0xa9, 0xc5, 0x05, 0xf9, 0x79, 0xc5, 0xa9, 0x42, 0x0a, 0x5c, 0xdc, 0x48, 0xc2,
-	0x12, 0x8c, 0x0a, 0x8c, 0x1a, 0x3c, 0x41, 0xc8, 0x42, 0x46, 0xe1, 0x28, 0x2a, 0x84, 0x3c, 0xb8,
-	0x38, 0x61, 0xdc, 0x54, 0x21, 0x31, 0x3d, 0x88, 0x95, 0x7a, 0x30, 0x2b, 0xf5, 0x5c, 0x41, 0x56,
-	0x4a, 0x29, 0xeb, 0xa1, 0x3a, 0x4d, 0x0f, 0x8b, 0xd5, 0x4e, 0x2c, 0x51, 0x4c, 0x65, 0x86, 0x49,
-	0x6c, 0x60, 0xad, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x81, 0x9d, 0x85, 0xe2, 0xf3, 0x00,
-	0x00, 0x00,
+	0x12, 0x8c, 0x0a, 0x8c, 0x1a, 0x3c, 0x41, 0xc8, 0x42, 0x46, 0xe9, 0x5c, 0x82, 0xce, 0x39, 0x99,
+	0xa9, 0x79, 0x25, 0x48, 0x82, 0x42, 0x41, 0x5c, 0xc2, 0x61, 0x89, 0x39, 0x99, 0x29, 0x89, 0x25,
+	0xa9, 0xc8, 0xc2, 0xca, 0x7a, 0xa8, 0x4e, 0xd2, 0xc3, 0x62, 0xa5, 0x94, 0x98, 0x1e, 0xc4, 0x9d,
+	0x7a, 0x30, 0x77, 0xea, 0xb9, 0x82, 0xdc, 0x69, 0x14, 0x87, 0xe2, 0x14, 0x21, 0x7f, 0x2e, 0x81,
+	0x80, 0xa2, 0xfc, 0xfc, 0x34, 0x64, 0x31, 0x1c, 0x5a, 0xa5, 0x88, 0xb1, 0xd7, 0x89, 0x25, 0x8a,
+	0xa9, 0xcc, 0x30, 0x89, 0x0d, 0xac, 0xd5, 0x18, 0x10, 0x00, 0x00, 0xff, 0xff, 0x49, 0x75, 0x40,
+	0xd0, 0x63, 0x01, 0x00, 0x00,
 }
