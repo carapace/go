@@ -1,0 +1,14 @@
+syntax="proto3";
+package v1.attestation;
+option go_package = "v1";
+
+import "google/protobuf/empty.proto";
+
+
+message AttestationResponse {
+    bytes Attestation = 1;
+}
+
+service Attestation {
+    rpc Attestate(google.protobuf.Empty) returns (AttestationResponse);
+}
