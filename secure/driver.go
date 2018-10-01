@@ -57,8 +57,9 @@ type Driver interface {
 	// Load receives a cert/private key/secret used in the signing of enclave material
 	Load(io.Reader) error
 
-	// Serve starts an attestation server.
-	Serve(...v1.AttestationServer)
+	// Serve starts an attestation server. If no servers are provided, the driver will default to the protobuf
+	// implementation.
+	Serve(...v1.AttestationServer) error
 }
 
 // Execute runs a file within the secure enclave. Execute is not guaranteed to be suitable
@@ -88,3 +89,8 @@ func Load(privkey io.Reader) error {
 	return driver.Load(privkey)
 }
 
+// Serve starts an attestation server. If no servers are provided, the driver will default to the protobuf
+// implementation.
+func Serve(server ...v1.AttestationServer) error {
+	return driver.Serve(server...)
+}
