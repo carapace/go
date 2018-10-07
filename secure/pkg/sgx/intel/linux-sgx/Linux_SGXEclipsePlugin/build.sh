@@ -45,7 +45,7 @@ function validate-parameter {
 }
 
 function cleanupPreBuild() {
-  ./clean.sh
+  clean.sh
 
   [[ "false" == "${DELETE_CURRENT_ECLIPSE}" ]] || {
     forceRemoveEclipse
